@@ -15,7 +15,7 @@ class TimeViewHolder(itemView: View,private var delegate: TimeViewHolderDelegate
     init {
         itemView.setOnClickListener {
             mTimeVO?.let {
-                delegate.onTapTime(it.startTime)
+                delegate.onTapTime(it.startTime,it.cinemaDayTimeslotId)
             }
         }
 

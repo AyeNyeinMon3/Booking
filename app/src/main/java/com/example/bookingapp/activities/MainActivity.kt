@@ -8,6 +8,7 @@ import com.example.bookingapp.adapters.SeatAdapter
 import com.example.bookingapp.adapters.TimeAdapter
 import com.example.bookingapp.data.VOs.CinemaVO
 import com.example.bookingapp.data.VOs.DateVos
+import com.example.bookingapp.data.VOs.TimeslotsVO
 import com.example.bookingapp.data.model.BookingModel
 import com.example.bookingapp.data.model.BookingModelImpl
 import com.example.bookingapp.databinding.ActivityMainBinding
@@ -30,6 +31,11 @@ class MainActivity : AppCompatActivity(),SeatViewHolderDelegate,CinemaViewHolder
     private var mBookingModel : BookingModel = BookingModelImpl
 
     private var dateList : MutableList<DateVos> = mutableListOf()
+    private var timeList : List<TimeslotsVO> = listOf()
+    private var mCinema : List<CinemaVO> = listOf()
+
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +50,7 @@ class MainActivity : AppCompatActivity(),SeatViewHolderDelegate,CinemaViewHolder
     }
 
     private fun requestData() {
-        mBookingModel.getCinemaByDate(
+        mBookingModel.getCinemaAndShowTimeByDate(
             onSuccess = {
                 mCinemaAdapter.setNewData(it)
 
@@ -53,14 +59,34 @@ class MainActivity : AppCompatActivity(),SeatViewHolderDelegate,CinemaViewHolder
 
             })
 
-        mBookingModel.getShowTimeByDate(
+        mBookingModel.getSeatingPlanByShowTime(
+
+
+
             onSuccess = {
-                mTimeAdapter.setNewData(it)
+//                mSeatAdapter.setNewData()
             },
             onFailure = {
 
             }
         )
+
+
+
+    }
+
+    private fun getSeatingPlanByShowTime(timeslotsId : Int){
+
+    }
+
+
+    private fun getShowTime(timeslots : List<TimeslotsVO>){
+
+        mTimeAdapter = TimeAdapter(this)
+        binding.rvTime.adapter = mTimeAdapter
+
+        mTimeAdapter.setNewData(timeslots)
+
     }
 
     private fun setUpRecyclerView() {
@@ -74,9 +100,6 @@ class MainActivity : AppCompatActivity(),SeatViewHolderDelegate,CinemaViewHolder
         mCinemaAdapter = CinemaAdapter(this)
         binding.rvCinema.adapter = mCinemaAdapter
 
-
-        mTimeAdapter = TimeAdapter(this)
-        binding.rvTime.adapter = mTimeAdapter
     }
 
     private fun generateUnlimitedDates() {
@@ -97,18 +120,25 @@ class MainActivity : AppCompatActivity(),SeatViewHolderDelegate,CinemaViewHolder
         }
     }
 
-    override fun onTapSeat(seatNumber: String) {
+    override fun onTapSeat(seatName: String) {
 //        Toast.makeText(this,"$seatId",Toast.LENGTH_SHORT).show()
-        binding.tvSeatNumber.text = seatNumber
+        binding.tvSeatNumber.text = seatName
     }
 
-    override fun onTapCinema(cinema: String) {
+    override fun onTapCinema(cinema: String, timeslots: List<TimeslotsVO>) {
         binding.tvCinema.text = cinema
+
+        getShowTime(timeslots)
+
     }
 
-    override fun onTapTime(startTime: String) {
-        binding.tvShowTime.text = startTime
+    override fun onTapTime(startTime: String, cinemaDayTimeslotId: Int) {
+        binding.tvShowTime.text = cinemaDayTimeslotId.toString()
+
+//        getSeatingPlanByShowTime(cinemaDayTimeslotId)
+
     }
+
 
 
 }

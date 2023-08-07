@@ -14,7 +14,8 @@ class CinemaViewHolder(itemView: View,private var delegate: CinemaViewHolderDele
     init {
         itemView.setOnClickListener {
             mCinemaVO?.let {
-                delegate.onTapCinema(it.cinema)
+                delegate.onTapCinema(it.cinema,it.timeslots)
+
 
             }
         }
